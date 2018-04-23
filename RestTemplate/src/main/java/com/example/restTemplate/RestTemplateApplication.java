@@ -37,7 +37,8 @@ public class RestTemplateApplication {
 	}
 	
 	
-	@Scheduled(fixedRate = 3000)
+//	@Scheduled(fixedRate = 3000)
+	@Scheduled(cron = "0,3,6,9 21 16 * * *")
 	public void restTempalteLogic() {
 		
 		String url = "http://localhost:8080/topics";
