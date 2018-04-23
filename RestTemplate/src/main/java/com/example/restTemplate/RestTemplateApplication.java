@@ -19,34 +19,64 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import net.minidev.json.JSONObject;
 
 
 @SpringBootApplication
 @EnableScheduling
 public class RestTemplateApplication {
 	
+	private static final Logger log = LoggerFactory.getLogger(RestTemplateApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(RestTemplateApplication.class, args);
+//		RestTemplateLogic run = new RestTemplateLogic();
+//		run.restTemplateLogic();
+	}
+	
+	
+	@Scheduled(fixedRate = 3000)
+	public void restTempalteLogic() {
 		
 		String url = "http://localhost:8080/topics";
 		RestTemplate restTemplate = new RestTemplate();		
 
-		HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_JSON);
-	    HttpEntity<Object> entity = new HttpEntity<Object>(headers);
+//		GET Request
+//		HttpHeaders headers = new HttpHeaders();
+//	    headers.setContentType(MediaType.APPLICATION_JSON);
+//	    HttpEntity<Object> entity = new HttpEntity<Object>(headers);
+//	    ResponseEntity<String> out = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+//	    System.out.println(out.getStatusCode());
+//	    System.out.println(out.getBody());
 		
-	    ResponseEntity<String> out = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		try {
+		ResponseEntity<String> out = restTemplate.getForEntity(url, String.class);
 	    System.out.println(out.getStatusCode());
 	    System.out.println(out.getBody());
-	    
+		} catch (HttpStatusCodeException e) {
+			String errorpayload = e.getResponseBodyAsString();
+//			System.out.println(errorpayload);
+			log.error(errorpayload);
+		}
+		
+//	GET Request End
+		
+//	    POST Request
 	    Map<String, String> params = new HashMap<String, String>();
-	    params.put("id", "0210");
-	    params.put("name", "hellooooo");
-	    params.put("description", "desc");
+	    params.put("id", "8520");
+	    params.put("name", "testing");
+	    params.put("description", "test_desc");
 	    
+	    try {
 	    ResponseEntity<String> response = restTemplate.postForEntity( url, params, String.class );
+	    System.out.println(response.getStatusCode());
+	    } catch (HttpStatusCodeException e) {
+			String errorpayload = e.getResponseBodyAsString();
+			System.out.println(errorpayload);
+		log.error(errorpayload);
+		}
+//		POST Request End
 	}
 }
