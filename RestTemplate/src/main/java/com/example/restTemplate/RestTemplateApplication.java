@@ -1,7 +1,9 @@
 package com.example.restTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +32,8 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateApplication {
 	
 	private static final Logger log = LoggerFactory.getLogger(RestTemplateApplication.class);
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+	
 	public static void main(String[] args) {
 		SpringApplication.run(RestTemplateApplication.class, args);
 //		RestTemplateLogic run = new RestTemplateLogic();
@@ -38,7 +42,7 @@ public class RestTemplateApplication {
 	
 	
 //	@Scheduled(fixedRate = 3000)
-	@Scheduled(cron = "0,3,6,9 21 16 * * *")
+	@Scheduled(cron = "0/14 * * * * *")
 	public void restTempalteLogic() {
 		
 		String url = "http://localhost:8080/topics";
@@ -54,6 +58,7 @@ public class RestTemplateApplication {
 		
 		try {
 		ResponseEntity<String> out = restTemplate.getForEntity(url, String.class);
+		System.out.println("The time is now:" +dateFormat.format(new Date()));
 	    System.out.println(out.getStatusCode());
 	    System.out.println(out.getBody());
 		} catch (HttpStatusCodeException e) {
